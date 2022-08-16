@@ -29,7 +29,7 @@ function Burger() {
                                 context.setCartValue(context.cart.length)
                             }}
                             
-                            >Order Now</button>
+                            >Add to Cart</button>
                         </div>
                         <div className='product-image'>
                             <img src={e.image} alt={e.name}></img>
