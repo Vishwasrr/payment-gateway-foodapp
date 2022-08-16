@@ -82,5 +82,5 @@ function PaymentGateway() {
         </div>
     );
 }
-
+ 
 export default PaymentGateway;
