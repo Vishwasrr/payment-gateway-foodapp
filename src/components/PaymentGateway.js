@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 function PaymentGateway() {
     let context = useContext(FoodContext);
     let temp = 0
-
+    let [toggle, setToggle] = useState(false);
     let content = '0'
     let temp_n = context.cart.map((e, i) => {
         console.log("hi");
@@ -16,71 +16,81 @@ function PaymentGateway() {
     });
 
     let price = content;
+    let handleToggle = async () => {
+        setToggle(true)
 
+    };
 
     return (
         <div className="gpaybutton">
             <h3 id="gheading">Payment Gateway</h3>
-
-            <div className="paybutton">
-                <GooglePayButton
-                    environment="TEST"
-                    paymentRequest={{
-                        apiVersion: 2,
-                        apiVersionMinor: 0,
-                        allowedPaymentMethods: [
-                            {
-                                type: "CARD",
-                                parameters: {
-                                    allowedAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"],
-                                    allowedCardNetworks: ["MASTERCARD", "VISA"],
-                                },
-                                tokenizationSpecification: {
-                                    type: "PAYMENT_GATEWAY",
-                                    parameters: {
-                                        gateway: "example",
-                                        gatewayMerchantId: "exampleGatewayMerchantId",
+            {
+                toggle ?
+                    <div className="paybutton">
+                        <GooglePayButton
+                            environment="TEST"
+                            paymentRequest={{
+                                apiVersion: 2,
+                                apiVersionMinor: 0,
+                                allowedPaymentMethods: [
+                                    {
+                                        type: "CARD",
+                                        parameters: {
+                                            allowedAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"],
+                                            allowedCardNetworks: ["MASTERCARD", "VISA"],
+                                        },
+                                        tokenizationSpecification: {
+                                            type: "PAYMENT_GATEWAY",
+                                            parameters: {
+                                                gateway: "example",
+                                                gatewayMerchantId: "exampleGatewayMerchantId",
+                                            },
+                                        },
                                     },
+                                ],
+                                merchantInfo: {
+                                    merchantId: "12345678901234567890",
+                                    merchantName: "Demo Merchant",
                                 },
-                            },
-                        ],
-                        merchantInfo: {
-                            merchantId: "12345678901234567890",
-                            merchantName: "Demo Merchant",
-                        },
-                        transactionInfo: {
-                            totalPriceStatus: "FINAL",
-                            totalPriceLabel: "Total",
-                            totalPrice: price,
-                            currencyCode: "INR",
-                            countryCode: "US",
-                        },
-                        shippingAddressRequired: true,
-                        callbackIntents: ["SHIPPING_ADDRESS", "PAYMENT_AUTHORIZATION"],
-                    }}
-                    onLoadPaymentData={(paymentRequest) => {
-                        console.log("Success", paymentRequest);
-                    }}
-                    onPaymentAuthorized={(paymentData) => {
-                        console.log("Payment Authorised Success", paymentData);
-                        return { transactionState: "SUCCESS" };
-                    }}
-                    onPaymentDataChanged={(paymentData) => {
-                        console.log("On Payment Data Changed", paymentData);
-                        return {};
-                    }}
-                    existingPaymentMethodRequired="false"
-                    buttonColor="black"
-                    buttonType="Buy"
-                />
-            </div>
-            <div className='placeholder-wrapper_new'>
+                                transactionInfo: {
+                                    totalPriceStatus: "FINAL",
+                                    totalPriceLabel: "Total",
+                                    totalPrice: price,
+                                    currencyCode: "INR",
+                                    countryCode: "US",
+                                },
+                                shippingAddressRequired: true,
+                                callbackIntents: ["SHIPPING_ADDRESS", "PAYMENT_AUTHORIZATION"],
+                            }}
+                            onLoadPaymentData={(paymentRequest) => {
+                                console.log("Success", paymentRequest);
+                            }}
+                            onPaymentAuthorized={(paymentData) => {
+                                console.log("Payment Authorised Success", paymentData);
+                                return { transactionState: "SUCCESS" };
+                            }}
+                            onPaymentDataChanged={(paymentData) => {
+                                console.log("On Payment Data Changed", paymentData);
+                                return {};
+                            }}
+                            existingPaymentMethodRequired="false"
+                            buttonColor="black"
+                            buttonType="Buy"
+                        />
+                    </div>
+                    :
+                    <div className='placeholder-wrapper_new'>
 
-                <Link to='/order'><button className='product-btn-placeholder'>Place Order</button></Link>
+                        <button
+                            className='product-btn-placeholder'
+                            onClick={() => handleToggle()}>Place Order</button>
 
-            </div>
+                    </div>
+            }
+
+
         </div>
     );
 }
- 
+
 export default PaymentGateway;
